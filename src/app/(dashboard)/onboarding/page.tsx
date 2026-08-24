@@ -13,7 +13,7 @@ import { toast } from "sonner";
 const steps = ["Academic Info", "USMLE Prep", "Study Prefs", "Matching Prefs"];
 
 export default function OnboardingPage() {
-  const { data: session, update: updateSession } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,11 +34,16 @@ export default function OnboardingPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      // Force session update to get isOnboarded: true
-      await updateSession({ ...session, user: { ...session?.user, isOnboarded: true } });
-      router.push("/dashboard");
+      // تحديث الـ session قبل التوجيه — حلقة الـ redirect loop
+      if (session?.user) {
+        await update({
+          session: { ...session, user: { ...session?.user, isOnboarded: true } }
+        });
+      }
+      router.replace("/dashboard");
     }
   }
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">

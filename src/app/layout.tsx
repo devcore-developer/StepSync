@@ -1,7 +1,15 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Sans_Arabic } from "next/font/google";
 import AuthProvider from "@/components/providers/session-provider";
 import { Toaster } from "sonner";
+
+const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -15,7 +23,15 @@ export const metadata: Metadata = {
   },
   description:
     "منصة ذكية لإعداد خطط الدراسة لامتحان USMLE مع شركاء دراسة ومجموعات تعاونية — Alexandria University",
-  keywords: ["USMLE", "study plan", "study partner", "medical education", "StepSync", "إعداد دراسي", "خطط دراسة"],
+  keywords: [
+    "USMLE",
+    "study plan",
+    "study partner",
+    "medical education",
+    "StepSync",
+    "إعداد دراسي",
+    "خطط دراسة",
+  ],
   authors: [{ name: "StepSync Team" }],
   robots: {
     index: false,
@@ -23,7 +39,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "StepSync — خطتك الدراسية للـ USMLE",
-    description: "منصة ذكية لإعداد خطط الدراسة لامتحان USMLE مع شركاء دراسة ومجموعات تعاونية",
+    description:
+      "منصة ذكية لإعداد خطط الدراسة لامتحان USMLE مع شركاء دراسة ومجموعات تعاونية",
     type: "website",
     locale: "ar_EG",
     siteName: "StepSync",
@@ -35,9 +52,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" className={ibmPlexArabic.variable}>
       <body className="antialiased">
         <AuthProvider>
           {children}
