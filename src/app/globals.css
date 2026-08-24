@@ -128,3 +128,15 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .bg-primary-5 {
+    background-color: color-mix(in oklch(var(--color-primary) 0.205 0 0 / 1), white, 0.05);
+  }
+  .bg-card-30 {
+    background-color: color-mix(in oklch(var(--color-card) 0.965 0 0 / 1), transparent, 0.3);
+  }
+  .bg-primary-10 {
+    background-color: color-mix(in oklch(var(--color-primary) 0.205 0 0 / 1), transparent, 0.1);
+  }
+}

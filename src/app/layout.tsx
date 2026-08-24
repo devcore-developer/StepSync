@@ -1,3 +1,4 @@
+import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import AuthProvider from "@/components/providers/session-provider";
 import { Toaster } from "sonner";
