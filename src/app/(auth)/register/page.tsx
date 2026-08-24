@@ -1,4 +1,5 @@
 "use client";
+
 import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -30,44 +31,105 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-12">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Create an account</h1>
-          <p className="mt-2 text-sm text-gray-600">Start your USMLE journey</p>
+          <Link href="/" className="inline-block">
+            <span className="text-2xl font-bold text-brand-blue">
+              StepSync
+            </span>
+          </Link>
+          <h1 className="mt-4 text-2xl font-bold text-brand-navy">
+            إنشاء حساب جديد
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            ابدأ رحلتك في التحضير لامتحان USMLE
+          </p>
         </div>
-        <form onSubmit={onSubmit} className="space-y-4 rounded-lg bg-white p-6 shadow-sm border">
+
+        <form
+          onSubmit={onSubmit}
+          className="space-y-4 rounded-xl bg-card p-6 shadow-sm ring-1 ring-foreground/5"
+        >
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input id="firstName" name="firstName" required />
+              <Label htmlFor="firstName">الاسم الأول</Label>
+              <Input
+                id="firstName"
+                name="firstName"
+                placeholder="أحمد"
+                required
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input id="lastName" name="lastName" required />
+              <Label htmlFor="lastName">اسم العائلة</Label>
+              <Input
+                id="lastName"
+                name="lastName"
+                placeholder="محمد"
+                required
+              />
             </div>
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" required />
+            <Label htmlFor="email">البريد الإلكتروني</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="ahmed@example.com"
+              dir="ltr"
+              className="text-left"
+              required
+            />
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" required />
-            <p className="text-xs text-gray-500">Min 8 chars, 1 uppercase, 1 number</p>
+            <Label htmlFor="password">كلمة المرور</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              dir="ltr"
+              className="text-left"
+              required
+            />
+            <p className="text-xs text-muted-foreground">
+              8 أحرف على الأقل، حرف كبير واحد، رقم واحد
+            </p>
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input id="confirmPassword" name="confirmPassword" type="password" required />
+            <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
+            <Input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              dir="ltr"
+              className="text-left"
+              required
+            />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating account..." : "Create Account"}
+
+          <Button
+            type="submit"
+            variant="cta"
+            size="xl"
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? "جارٍ إنشاء الحساب..." : "إنشاء حساب"}
           </Button>
         </form>
-        <p className="text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link href="/login" className="font-medium text-blue-600 hover:underline">
-            Sign in
+
+        <p className="text-center text-sm text-muted-foreground">
+          لديك حساب بالفعل؟{" "}
+          <Link
+            href="/login"
+            className="font-medium text-brand-blue hover:underline"
+          >
+            تسجيل الدخول
           </Link>
         </p>
       </div>

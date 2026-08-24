@@ -48,12 +48,25 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.isOnboarded = user.isOnboarded;
       }
+
+      // أعد قراءة isOnboarded من قاعدة البيانات إذا كانت false
+      // هذا يغطي حالة اكتمال الـ onboarding
+      if (token.id && !token.isOnboarded) {
+        const dbUser = await db.user.findUnique({
+          where: { id: token.id as string },
+          select: { isOnboarded: true },
+        });
+        if (dbUser?.isOnboarded) {
+          token.isOnboarded = true;
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {
