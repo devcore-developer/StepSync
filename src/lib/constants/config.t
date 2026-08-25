@@ -4,12 +4,17 @@ export const APP_DESCRIPTION = "Your USMLE Study Companion";
 export const BRAND = {
   colors: {
     red: "#E31837",
-    blue: "#005DAA",
-    gold: "#E9B949",
-    navy: "#111827",
+    blue: "#0057A8",
+    gold: "#F2C14E",
+    navy: "#0B1F33",
+    lightBlue: "#EAF3FB",
+    lightRed: "#FDECEF",
+    lightGold: "#FFF7DF",
+    surface: "#F7F9FC",
+    surfaceAlt: "#F1F4F8",
   },
   dark: {
-    background: "#0B1220",
-    surface: "#0F2742",
+    background: "#0D1B2A",
+    surface: "#132238",
   },
 } as const;

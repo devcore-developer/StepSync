@@ -13,7 +13,7 @@ export default function HeroCta() {
 
   if (!mounted) {
     return (
-      <div className="flex items-center justify-center gap-3">
+      <div className="flex items-center gap-3">
         <div className="h-11 w-32 animate-pulse rounded-lg bg-white/10" />
         <div className="h-11 w-32 animate-pulse rounded-lg bg-white/10" />
       </div>
@@ -24,25 +24,25 @@ export default function HeroCta() {
     return (
       <Link
         href="/dashboard"
-        className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-brand-red px-7 text-sm font-semibold text-white transition-colors hover:bg-brand-red/90 shadow-lg shadow-brand-red/20"
+        className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-brand-red px-7 text-sm font-semibold text-white transition-colors hover:bg-brand-red/90"
       >
         <ArrowLeft className="h-4 w-4" />
-        الذهاب إلى لوحة التحكم
+        لوحة التحكم
       </Link>
     );
   }
 
   return (
-    <div className="flex items-center justify-center gap-3">
+    <div className="flex items-center gap-3">
       <Link
         href="/register"
-        className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-brand-red px-7 text-sm font-semibold text-white transition-colors hover:bg-brand-red/90 shadow-lg shadow-brand-red/20"
+        className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-brand-red px-7 text-sm font-semibold text-white transition-colors hover:bg-brand-red/90"
       >
         ابدأ الآن
       </Link>
       <Link
         href="/login"
-        className="inline-flex h-11 items-center justify-center rounded-lg border border-white/25 bg-white/10 px-7 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+        className="inline-flex h-11 items-center justify-center rounded-lg border border-white/20 bg-white/10 px-7 text-sm font-medium text-white transition-colors hover:bg-white/20"
       >
         تسجيل الدخول
       </Link>
