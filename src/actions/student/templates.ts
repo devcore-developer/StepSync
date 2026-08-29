@@ -18,7 +18,7 @@ export async function getPublishedTemplates() {
 export async function getTemplateDetails(slug: string) {
   const session = await getServerSession(authOptions);
   if (!session) throw new Error('Unauthorized');
-  return db.scheduleTemplate.findUnique({
+  return db.scheduleTemplate.findFirst({
     where: { slug, status: 'PUBLISHED' },
     include: {
       milestones: {

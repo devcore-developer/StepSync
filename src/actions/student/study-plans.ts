@@ -293,7 +293,13 @@ export async function uncompleteTask(taskId: string) {
 //  CREATE FROM TEMPLATE
 // ═══════════════════════════════════════════════════════════
 
-export async function createStudyPlanFromTemplate(templateId: string) {
+// src/actions/student/study-plans.ts
+// استبدل دالة createStudyPlanFromTemplate بالكامل
+
+export async function createStudyPlanFromTemplate(
+  templateId: string,
+  options?: { startDate?: string }
+) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) throw new Error("غير مصرح");
 
@@ -310,14 +316,23 @@ export async function createStudyPlanFromTemplate(templateId: string) {
   const t = template as any;
   const templateMilestones: any[] = t.milestones ?? [];
 
+  // حساب تاريخ البداية
+  const startDate = options?.startDate
+    ? new Date(options.startDate)
+    : new Date();
+  startDate.setHours(0, 0, 0, 0);
+
   const plan = await db.studyPlan.create({
     data: {
       userId,
       title: t.title ?? "خطة دراسية",
       description: t.description ?? null,
       status: "ACTIVE",
+      isActive: true,
       sourceType: "TEMPLATE",
-      sourceTemplateId: templateId,
+      // ✅ FIX: استخدم الـ id الحقيقي من الـ DB مش الـ slug من الـ URL
+      sourceTemplateId: t.id,
+      startDate,
       milestones: {
         create: templateMilestones.map((m: any) => {
           const milestoneTasks: any[] =
@@ -326,20 +341,40 @@ export async function createStudyPlanFromTemplate(templateId: string) {
               (tk: any) => tk.milestoneId === m.id || tk.templateMilestoneId === m.id
             );
 
+          // حساب تواريخ الـ milestone
+          const milestoneStart = m.startDayOffset
+            ? addDays(startDate, m.startDayOffset - 1)
+            : startDate;
+          const milestoneEnd = m.endDayOffset
+            ? addDays(startDate, m.endDayOffset - 1)
+            : null;
+
           return {
             title: m.title,
             order: m.order ?? 0,
             systemId: m.systemId ?? null,
+            startDate: milestoneStart,
+            targetEndDate: milestoneEnd,
             tasks: {
-              create: milestoneTasks.map((tk: any) => ({
-                title: tk.title ?? "",
-                type: tk.type ?? "CUSTOM",
-                order: tk.order ?? 0,
-                isOptional: tk.isOptional ?? false,
-                status: "PENDING",
-                chapterId: tk.chapterId ?? null,
-                resourceId: tk.resourceId ?? null,
-              })),
+              create: milestoneTasks.map((tk: any) => {
+                // حساب scheduledDate من startDayOffset
+                const scheduledDate = tk.startDayOffset
+                  ? addDays(startDate, tk.startDayOffset - 1)
+                  : milestoneStart;
+
+                return {
+                  title: tk.title ?? "",
+                  type: tk.type ?? "CUSTOM",
+                  order: tk.order ?? 0,
+                  isOptional: tk.isOptional ?? false,
+                  status: "PENDING" as const,
+                  chapterId: tk.chapterId ?? null,
+                  resourceId: tk.resourceId ?? null,
+                  estimatedHours: tk.estimatedHours ?? null,
+                  scheduledDate,
+                  originalScheduledDate: scheduledDate,
+                };
+              }),
             },
           };
         }),
@@ -350,9 +385,30 @@ export async function createStudyPlanFromTemplate(templateId: string) {
     },
   });
 
+  // حساب endDate من آخر مهمة
+  const allTasks = plan.milestones.flatMap((m) => m.tasks);
+  const lastTask = allTasks
+    .filter((t) => t.scheduledDate)
+    .sort((a, b) => a.scheduledDate!.getTime() - b.scheduledDate!.getTime())
+    .pop();
+
+  if (lastTask?.scheduledDate) {
+    await db.studyPlan.update({
+      where: { id: plan.id },
+      data: { endDate: lastTask.scheduledDate },
+    });
+  }
+
   revalidatePath("/dashboard");
   revalidatePath("/study-plan");
   return plan;
+}
+
+// Helper function
+function addDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
 }
 
 // ═══════════════════════════════════════════════════════════
